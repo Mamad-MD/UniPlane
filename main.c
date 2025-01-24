@@ -6,25 +6,29 @@
 #include "UniPlaneHeader.h"
 
 int main() {
-    Student* head = NULL;
-    LoadFromFile(&head); 
+    Student* studentHead = NULL;
+    Course* courseHead = NULL;
+
+    LoadFromFile(&studentHead);
+    LoadCoursesFromFile(&courseHead);
 
     int choice;
     do {
         choice = welcome();
+
         switch (choice) {
         case 1:
-            while (!login(head)) {
+            while (!login(studentHead)) {
                 printf("Returning to main menu...\n");
                 break;
             }
             break;
         case 2:
-            signup(&head);
+            signup(&studentHead);
             break;
         case 3:
-            if (login(head)) {
-                Golestan();
+            if (login(studentHead)) {
+                Golestan(studentHead, &courseHead);
             }
             break;
         case 0:
@@ -36,5 +40,7 @@ int main() {
         }
     } while (choice != 0);
 
+    FreeStudentList(studentHead);
+    FreeCourseList(courseHead);
     return 0;
 }
