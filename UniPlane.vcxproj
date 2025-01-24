@@ -128,9 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="sqlite3.c" />
     <ClCompile Include="UniPlane.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sqlite3.h" />
     <ClInclude Include="UniPlaneHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

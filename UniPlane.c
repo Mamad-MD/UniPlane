@@ -250,7 +250,7 @@ void signup(Student** head) {
 
 int login(Student* head) {
 	char username[20], password[20];
-	printf("Welcome Back! Please log in.\n\n");
+	printf("\nWelcome Back! Please log in.\n\n");
 	printf("Enter 0 at any time to go back.\n");
 
 	printf("Username: ");
@@ -290,21 +290,24 @@ void AddCourse(Course** head) {
 	printf("--- Add New Course ---\n");
 
 	printf("Enter Course Name: ");
-	getchar(); // برای حذف کاراکتر جدیده که از خط قبلی اینجا مونده
+	getchar();
 	fgets(newCourse->CourseName, sizeof(newCourse->CourseName), stdin);
-	newCourse->CourseName[strcspn(newCourse->CourseName, "\n")] = '\0'; // حذف کاراکتر اون خط جدیده
+	newCourse->CourseName[strcspn(newCourse->CourseName, "\n")] = '\0';
 
 	printf("Enter Course ID: ");
 	fgets(newCourse->CourseID, sizeof(newCourse->CourseID), stdin);
 	newCourse->CourseID[strcspn(newCourse->CourseID, "\n")] = '\0';
 
+	printf("Enter Time (e.g., 8:00 10:00 Saturday-Monday): ");
+	char timeInput[100];
+	fgets(timeInput, sizeof(timeInput), stdin);
+	timeInput[strcspn(timeInput, "\n")] = '\0';
+
+	sscanf(timeInput, "%s %s %[^\n]", newCourse->StartTime, newCourse->EndTime, newCourse->Days);
+
 	printf("Enter Professor: ");
 	fgets(newCourse->Professor, sizeof(newCourse->Professor), stdin);
 	newCourse->Professor[strcspn(newCourse->Professor, "\n")] = '\0';
-
-	printf("Enter Time: ");
-	fgets(newCourse->Time, sizeof(newCourse->Time), stdin);
-	newCourse->Time[strcspn(newCourse->Time, "\n")] = '\0';
 
 	printf("Select Department from the list:\n");
 	for (int i = 0; i < FieldOfStudyCount; i++) {
@@ -494,7 +497,9 @@ void ListCourses(Course* head) {
 		printf("Course Name: %s\n", temp->CourseName);
 		printf("Course ID: %s\n", temp->CourseID);
 		printf("Professor: %s\n", temp->Professor);
-		printf("Time: %s\n", temp->Time);
+		printf("Days: %s\n", temp->Days); 
+		printf("Start Time: %s\n", temp->StartTime);
+		printf("End Time: %s\n", temp->EndTime);
 		printf("Department: %s\n", temp->Department);
 		printf("Minimum Units Required: %d\n", temp->MinUnitsRequired);
 		printf("Prerequisites: ");

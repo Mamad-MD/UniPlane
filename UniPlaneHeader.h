@@ -1,6 +1,7 @@
 ﻿#ifndef UNIPLANE_H_
 #define UNIPLANE_H_
 
+
 #define MAX_STUDY_LENGTH 30   //حداکثر طول رشته تحصیلی
 #define MAX_PASSED_COURSES 10 // حداکثر تعداد دروس پاس شده
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
@@ -22,7 +23,9 @@ typedef struct Student {
 typedef struct Course {
 	char CourseName[100];
 	char CourseID[10];
-	char Time[15];
+	char Days[50];     
+	char StartTime[10];
+	char EndTime[10];
 	char Department[50];
 	char Professor[50];
 	int MinUnitsRequired;                         //حداقل واحد 
@@ -31,7 +34,6 @@ typedef struct Course {
 }Course;
 extern const char* FieldOfStudy[];
 extern const int FieldOfStudyCount;
-
 
 int welcome();
 void signup(Student** head);
