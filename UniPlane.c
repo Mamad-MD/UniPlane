@@ -22,7 +22,7 @@ int welcome() {
 	if (scanf("%d", &choice) != 1) {
 		printf("Invalid input! Please enter a number.\n");
 		while (getchar() != '\n'); // واسه اینکه بافر ورودی را پاک کنیم
-		return -1; 
+		return -1;
 	}
 	return choice;
 }
@@ -290,9 +290,9 @@ void AddCourse(Course** head) {
 	printf("--- Add New Course ---\n");
 
 	printf("Enter Course Name: ");
-	getchar(); // برای حذف کاراکتر جدید خط باقی‌مانده از ورودی قبلی
+	getchar(); // برای حذف کاراکتر جدیده که از خط قبلی اینجا مونده
 	fgets(newCourse->CourseName, sizeof(newCourse->CourseName), stdin);
-	newCourse->CourseName[strcspn(newCourse->CourseName, "\n")] = '\0'; // حذف کاراکتر جدید خط
+	newCourse->CourseName[strcspn(newCourse->CourseName, "\n")] = '\0'; // حذف کاراکتر اون خط جدیده
 
 	printf("Enter Course ID: ");
 	fgets(newCourse->CourseID, sizeof(newCourse->CourseID), stdin);
@@ -631,4 +631,3 @@ void FreeCourseList(Course* head) {
 		free(temp);
 	}
 }
-
