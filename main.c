@@ -5,11 +5,19 @@
 #include <Windows.h>
 #include "UniPlaneHeader.h"
 
+
+
+int CourseIDCounter[MAX_COURSES] = { 0 }; 
+
+
 int main() {
     Student* studentHead = NULL;
     Course* courseHead = NULL;
 
+   // printf("Debug: Loading students from file\n");
     LoadFromFile(&studentHead);
+
+  //  printf("Debug: Loading courses from file\n");
     LoadCoursesFromFile(&courseHead);
 
     int choice;
@@ -17,14 +25,21 @@ int main() {
         choice = welcome();
 
         switch (choice) {
-        case 1:
-            while (!login(studentHead)) {
+        case 1: {
+            int loginResult = login(studentHead);
+            if (loginResult == 1) {
+                StudentMenu();
+            }
+            else if (loginResult == 2) {
+                Golestan(studentHead, &courseHead);
+            }
+            else {
                 printf("Returning to main menu...\n");
-                break;
             }
             break;
+        }
         case 2:
-            signup(&studentHead);
+            signup(&studentHead, courseHead);
             break;
         case 3:
             if (login(studentHead)) {

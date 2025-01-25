@@ -1,0 +1,15 @@
+Riazi1,101-01,Mr.Zareii,Sunday-Tuesday,8:00,10:00,Mathematical,3,,
+Riazi1,101-02,Mis.Soltani,Saturday-Monday,8:00,10:00,Mathematical,3,,
+Riazi2,102-01,Mr.Nemati,Sunday-Tuesday,10:00,12:00,Mathematical,3,101-01,
+Riazi2,102-02,Mr.Khani,Saturday-Monday,8:00,10:00,Mathematical,3,101-01,
+Difransiel,103-01,Mr.Parnian,Sunday-Tuesday,15:00,17:00,Mathematical,3,102-01,101-01
+Difransiel,103-02,Mr.Behbodi,Saturday-Monday,13:00,15:00,Mathematical,3,102-01,101-01
+Physics1,104-01,Mr.Hashemi,Saturday-Monday,14:30,15:00,Physics,3,,101-01
+Physics2,105-01,Mis.Shakeri,Saturday-Monday,8:00,10:00,Physics,3,104-01,
+Physics2,105-02,Mis.Sajadian,Sunday-Tuesday,8:00,10:00,Physics,3,104-01,
+BP,106-01,Mr.Zahabi,Saturday-Monday,11:00,12:30,Computer Engineering,4,,
+AP,107-01,Mis.Zali,Sunday-Tuesday,10:00,12:00,Computer Engineering,4,106-01,
+AP,107-02,Mis.Amiri,Saturday-Monday,10:00,12:00,Computer Engineering,4,106-01,
+AP,107-03,Mis.NijNadaf,Saturday-Monday,13:00,15:00,Computer Engineering,4,106-01,
+Gosaste,108-01,Mr.Zahabi,Sunday-Tuesday,13:00,15:00,Computer Engineering,3,105-01,106-01
+Gosaste,108-02,Mis.Maleki,Sunday-Tuesday,8:00,9:30,Computer Engineering,3,105-01,106-01
