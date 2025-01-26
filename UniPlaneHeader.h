@@ -2,16 +2,16 @@
 #define UNIPLANE_H_
 
 
-#define MAX_STUDY_LENGTH 30   //حداکثر طول رشته تحصیلی
+#define MAX_STUDY_LENGTH 50   //حداکثر طول رشته تحصیلی
 #define MAX_PASSED_COURSES 10 // حداکثر تعداد دروس پاس شده
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
 #define MAX_COURSES 200       // حداکثر تعداد درس ها در این برنامه
 
-  // شمارنده‌ی آیدی‌های درس
+
 extern int CourseIDCounter[MAX_COURSES];
 
 typedef struct Student {
-	char Name[20];
+	char Name[50];
 	char LastName[50];
 	char ID[9];
 	char UserName[20];

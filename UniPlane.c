@@ -42,7 +42,10 @@ void SaveToFile(Student* student) {
 		printf("Error opening file!\n");
 		return;
 	}
-	fwrite(student, sizeof(Student), 1, file);
+	if (fwrite(student, sizeof(Student), 1, file) != 1) {
+		printf("Error writing to file!\n");
+	}
+
 	fclose(file);
 }
 
@@ -136,25 +139,26 @@ void signup(Student** head, Course* courseHead) {
 		printf("Memory allocation failed!\n");
 		return;
 	}
+	memset(newStudent, 0, sizeof(Student));
 	int valid = 0;
 
 	printf("---- Student Registration ----\n\n");
 	printf("Enter 0 at any time to go back.\n");
 
 	printf("Please Enter Name: ");
-	if (scanf("%s", newStudent->Name) != 1 || strcmp(newStudent->Name, "0") == 0) {
+	if (scanf("%49s", newStudent->Name) != 1 || strcmp(newStudent->Name, "0") == 0) {
 		free(newStudent);
 		return;
 	}
 	printf("Enter LastName: ");
-	if (scanf("%s", newStudent->LastName) != 1 || strcmp(newStudent->LastName, "0") == 0) {
+	if (scanf("%49s", newStudent->LastName) != 1 || strcmp(newStudent->LastName, "0") == 0) {
 		free(newStudent);
 		return;
 	}
 	do {
 		valid = 1;
 		printf("Enter Username: ");
-		if (scanf("%s", newStudent->UserName) != 1 || strcmp(newStudent->UserName, "0") == 0) {
+		if (scanf("%19s", newStudent->UserName) != 1 || strcmp(newStudent->UserName, "0") == 0) {
 			free(newStudent);
 			return;
 		}
@@ -173,7 +177,7 @@ void signup(Student** head, Course* courseHead) {
 	do {
 		valid = 0;
 		printf("Enter Email (must end with @gmail.com): ");
-		if (scanf("%s", newStudent->Email) != 1 || strcmp(newStudent->Email, "0") == 0) {
+		if (scanf("%99s", newStudent->Email) != 1 || strcmp(newStudent->Email, "0") == 0) {
 			free(newStudent);
 			return;
 		}
@@ -315,7 +319,7 @@ void signup(Student** head, Course* courseHead) {
 	do {
 		valid = 0;
 		printf("Enter Password (minimum 6 characters): ");
-		if (scanf("%s", password) != 1) {
+		if (scanf("%19s", password) != 1) {
 			printf("Invalid input! Please try again.\n");
 			while (getchar() != '\n');
 			continue;
@@ -331,7 +335,7 @@ void signup(Student** head, Course* courseHead) {
 		}
 
 		printf("Confirm Password: ");
-		if (scanf("%s", confirmPassword) != 1) {
+		if (scanf("%19s", confirmPassword) != 1) {
 			printf("Invalid input! Please try again.\n");
 			while (getchar() != '\n'); // پاک کردن بافر ورودی
 			continue;
@@ -413,6 +417,8 @@ void AddCourse(Course** head) {
 		printf("Memory allocation failed!\n");
 		return;
 	}
+	memset(newCourse, 0, sizeof(Course));
+
 	printf("\n--- Add New Course ---\n");
 
 	printf("Enter Course Name: ");
@@ -494,6 +500,38 @@ void AddCourse(Course** head) {
 		printf("Course ID: %s, Course Name: %s\n", courseIDPrefix, temp->CourseName);
 		temp = temp->next;
 	}
+
+
+
+
+		// بررسی پیش‌نیازها
+		//char prerequisiteInput[100];
+		//printf("\nEnter Prerequisite Course IDs (3 digits each, separated by spaces, or 0 if none): ");
+		//getchar();
+		//fgets(prerequisiteInput, sizeof(prerequisiteInput), stdin);
+		//prerequisiteInput[strcspn(prerequisiteInput, "\n")] = '\0';
+
+		//if (strcmp(prerequisiteInput, "0") != 0) {
+		//	char* token = strtok(prerequisiteInput, " ");
+		//	int count = 0;
+
+		//	while (token != NULL && count < MAX_PREREQUISITES) {
+		//		if (IsCourseExists(*head, token)) {
+		//			strcpy(newCourse->Prerequisites[count], token);
+		//			count++;
+		//		}
+		//		else {
+		//			printf("Invalid Course ID: %s! Prerequisite not set.\n", token);
+		//		}
+		//		token = strtok(NULL, " ");
+		//	}
+
+		//	newCourse->PrerequisiteCount = count;
+		//}
+
+		//// ... (بقیه کد)
+
+
 
 
 	char prerequisiteInput[100];
