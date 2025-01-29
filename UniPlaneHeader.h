@@ -7,7 +7,7 @@
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
 #define MAX_COURSES 200       // حداکثر تعداد درس ها در این برنامه
 #define MAX_ENROLLED_COURSES 10 // حداکثر تعداد دروس ثبت‌نام شده
-
+#define MAX_SCHEDULES 100  // حداکثر تعداد برنامه‌های قابل ذخیره‌سازی
 
 extern int CourseIDCounter[MAX_COURSES];
 
@@ -17,9 +17,9 @@ typedef struct Student {
 	char ID[9];
 	char UserName[20];
 	char Email[100];
-	char FieldOfStudy[MAX_STUDY_LENGTH];     //رشته تحصیلی
-	int NumberOfUnitsPassed;
-	char CoursesPassed[MAX_PASSED_COURSES][10];  //کد دروس پاس شده
+	char FieldOfStudy[MAX_STUDY_LENGTH];     
+    int NumberOfUnitsPassed;
+	char CoursesPassed[MAX_PASSED_COURSES][10]; 
     char EnrolledCourses[MAX_ENROLLED_COURSES][20];
     char password[20];
 	struct Student* next;
@@ -40,6 +40,13 @@ typedef struct Course {
     char Corequisite[10];
     struct Course* next;
 } Course;
+
+typedef struct StudentSchedule {
+    char studentName[50]; 
+    char scheduleName[50];
+    char schedule[MAX_ENROLLED_COURSES][20]; 
+} StudentSchedule;
+StudentSchedule allSchedules[MAX_SCHEDULES];
 
 extern const char* FieldOfStudy[];
 extern const int FieldOfStudyCount;
@@ -71,6 +78,7 @@ void PrioritizeCourses(Student* student, Course* courseHead);
 void GenerateSchedules(Student* student, Course* courseHead, char schedules[3][MAX_ENROLLED_COURSES][20], char scheduleNames[3][50]);
 void PrintSchedules(Student* student, Course* courseHead, char schedules[3][MAX_ENROLLED_COURSES][20], char scheduleNames[3][50]);
 void CheckDuplicateCourses(Student* student);
+void ViewAllSchedules();
 void FreeStudentList(Student* head);
 void FreeCourseList(Course* head);
 

@@ -9,17 +9,19 @@
 
 int CourseIDCounter[MAX_COURSES] = { 0 }; 
 
+ // تعداد برنامه‌های ذخیره‌شده
+
 
 int main() {
     Student* studentHead = NULL;
     Course* courseHead = NULL;
 
-   // printf("Debug: Loading students from file\n");
     LoadFromFile(&studentHead);
 
-  //  printf("Debug: Loading courses from file\n");
     LoadCoursesFromFile(&courseHead);
 
+    LoadSchedulesFromFile();
+   
     int choice;
     do {
         choice = welcome();
@@ -28,14 +30,7 @@ int main() {
         case 1: {
             int loginResult = login(studentHead);
             if (loginResult == 1) {
-                Student* currentStudent = studentHead;
-                while (currentStudent != NULL) {
-                    if (strcmp(currentStudent->UserName, "username") == 0) { // جایگزین با نام کاربری واقعی
-                        StudentMenu(currentStudent, courseHead);
-                        break;
-                    }
-                    currentStudent = currentStudent->next;
-                }
+                StudentMenu(studentHead, &courseHead);
             }
             else if (loginResult == 2) {
                 Golestan(studentHead, &courseHead);

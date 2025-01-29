@@ -3,24 +3,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <Windows.h>
-//#include <openssl/sha.h>
 #include "UniPlaneHeader.h"
 
-
-/*void hashPassword(const char* password, char* output) {
-	unsigned char hash[SHA256_DIGEST_LENGTH];
-	SHA256_CTX sha256;
-	SHA256_Init(&sha256);
-	SHA256_Update(&sha256, password, strlen(password));
-	SHA256_Final(hash, &sha256);
-
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-		sprintf(output + (i * 2), "%02x", hash[i]);
-	}
-	output[SHA256_DIGEST_LENGTH * 2] = '\0';
-}*/
-
 const char welcome_icon[] = "\xE2\x97\x88";
+int scheduleCount = 0;
 
 int welcome() {
 	SetConsoleOutputCP(CP_UTF8);
@@ -34,7 +20,7 @@ int welcome() {
 	int choice;
 	if (scanf("%d", &choice) != 1) {
 		printf("Invalid input! Please enter a number.\n");
-		while (getchar() != '\n'); // پاک کردن بافر ورودی
+		while (getchar() != '\n');
 		return -1;
 	}
 	return choice;
@@ -148,42 +134,44 @@ void LoadCoursesFromFile(Course** head) {
 	// printf("Debug: Exiting LoadCoursesFromFile\n");
 }
 
-/*//////   void hashPassword(const char* password, char* output) {
-	unsigned char hash[SHA256_DIGEST_LENGTH];
-	SHA256_CTX sha256;
-	SHA256_Init(&sha256);
-	SHA256_Update(&sha256, password, strlen(password));
-	SHA256_Final(hash, &sha256);
-
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-		sprintf(output + (i * 2), "%02x", hash[i]);
+void SaveSchedulesToFile() {
+	FILE* file = fopen("schedules.dat", "wb");
+	if (file == NULL) {
+		printf("Error opening file!\n");
+		return;
 	}
-	output[SHA256_DIGEST_LENGTH * 2] = '\0';
-} /////////*/
 
-// تابع هش پیچیده‌تر
+	fwrite(&scheduleCount, sizeof(int), 1, file);
+	fwrite(allSchedules, sizeof(StudentSchedule), scheduleCount, file);
+
+	fclose(file);
+	printf("Schedules saved to file successfully!\n");
+}
+
+void LoadSchedulesFromFile() {
+	FILE* file = fopen("schedules.dat", "rb");
+	if (file == NULL) {
+		printf("No saved schedules found.\n");
+		return;
+	}
+
+	fread(&scheduleCount, sizeof(int), 1, file);
+	fread(allSchedules, sizeof(StudentSchedule), scheduleCount, file);
+
+	fclose(file);
+	printf("Schedules loaded from file successfully!\n");
+}
+
 void simpleHash(char* input, char* output) {
 	unsigned long hash = 5381;
 	int c;
 
 	while ((c = *input++)) {
-		hash = ((hash << 5) + hash) + c;  // hash * 33 + c
+		hash = ((hash << 5) + hash) + c; 
 	}
 
-	sprintf(output, "%lx", hash);  // تبدیل هش به رشته
+	sprintf(output, "%lx", hash);
 }
-
-// تبدیل هش به رشته
-void hashToString(char* hashed, char* output) {
-	sprintf(output, "%s", hashed);
-}
-
-// مقایسه هش‌ها
-int compareHashes(char* original, char* entered) {
-	return strcmp(original, entered) == 0;
-}
-
-
 
 void signup(Student** head, Course* courseHead) {
 	Student* newStudent = (Student*)malloc(sizeof(Student));
@@ -298,7 +286,6 @@ void signup(Student** head, Course* courseHead) {
 		return;
 	}
 	printf("\n---- List of Existing Courses ----\n");
-	printf("\n---- List of Existing Courses ----\n");
 	Course* tempCourse = courseHead;
 	while (tempCourse != NULL) {
 		printf("Course ID: %s, Course Name: %s\n", tempCourse->CourseID, tempCourse->CourseName);
@@ -372,10 +359,9 @@ void signup(Student** head, Course* courseHead) {
 			while (getchar() != '\n');
 		}
 		else {
-			// هش کردن پسورد
-			char hashedPassword[20];
-			simpleHash(password, hashedPassword);  // هش کردن پسورد
-			strcpy(newStudent->password, hashedPassword);  // ذخیره هش در سیستم
+			char hashedPassword[32];
+			simpleHash(password, hashedPassword);  
+			strcpy(newStudent->password, hashedPassword);  
 			break;
 		}
 	} while (!valid);
@@ -388,37 +374,38 @@ void signup(Student** head, Course* courseHead) {
 
 int login(Student* head) {
 	char username[20], password[20];
+
 	printf("\nWelcome Back! Please log in.\n\n");
 	printf("Enter 0 at any time to go back.\n");
 
 	printf("Username: ");
-	if (scanf("%s", username) != 1 || strcmp(username, "0") == 0) {
+	if (scanf("%19s", username) != 1 || strcmp(username, "0") == 0) {
 		return 0;
 	}
 
 	printf("Password: ");
-	if (scanf("%s", password) != 1 || strcmp(password, "0") == 0) {
+	if (scanf("%19s", password) != 1 || strcmp(password, "0") == 0) {
 		return 0;
 	}
 
-	Student* temp = head;
-	char hashedPassword[20];
-	simpleHash(password, hashedPassword);  // هش کردن پسورد وارد شده
-	char finalHash[20];
-	hashToString(hashedPassword, finalHash); // تبدیل به رشته قابل نمایش
+	char hashedPassword[32];
+	simpleHash(password, hashedPassword);
 
+
+	Student* temp = head;
 	while (temp != NULL) {
-		if (strcmp(temp->UserName, username) == 0 && compareHashes(temp->password, finalHash)) {
+		if (strcmp(temp->UserName, username) == 0 && strcmp(temp->password, hashedPassword) == 0) {
 			printf("\nLogin successful! Welcome %s %s.\n", temp->Name, temp->LastName);
-			return 1;
+			return 1;  
 		}
 		temp = temp->next;
 	}
 
 	if (strcmp(username, "Golestan") == 0 && strcmp(password, "12345") == 0) {
 		printf("\nGolestan login successful!\n");
-		return 2;
+		return 2; 
 	}
+
 
 	printf("Username or Password is incorrect. Try again later.\n");
 	return 0;
@@ -444,27 +431,6 @@ void AddCourse(Course** head) {
 	getchar();
 	fgets(newCourse->CourseName, sizeof(newCourse->CourseName), stdin);
 	newCourse->CourseName[strcspn(newCourse->CourseName, "\n")] = '\0';
-
-	/*memset(newCourse->CourseID, 0, sizeof(newCourse->CourseID));
-	char baseID[10];
-	printf("Enter Base Course ID (e.g., 101): ");
-	scanf("%9s", baseID);
-	for (int i = 0; i < strlen(baseID); i++) {
-		if (!isdigit(baseID[i])) {
-			printf("Invalid Base ID! Only digits are allowed.\n");
-			return;
-		}
-	}
-	int baseIDValue = atoi(baseID);
-	if (baseIDValue < 100) {
-		printf("Invalid Base ID! Base ID must be 100 or greater.\n");
-		return;
-	}
-
-	GenerateCourseID(newCourse->CourseID, baseID);
-
-	newCourse->CourseID[sizeof(newCourse->CourseID) - 1] = '\0';
-	printf("Auto-generated Course ID: %s\n", newCourse->CourseID);*/
 
 	char baseID[10];
 	printf("Enter Base Course ID (e.g., 101): ");
@@ -695,7 +661,6 @@ void AddPrerequisite(Course* course) {
 	printf("Enter Prerequisite Course ID: ");
 	scanf("%s", prerequisiteID);
 
-	// Check if the prerequisite already exists
 	for (int i = 0; i < course->PrerequisiteCount; i++) {
 		if (strcmp(course->Prerequisites[i], prerequisiteID) == 0) {
 			printf("Prerequisite already exists!\n");
@@ -875,7 +840,7 @@ void ViewMenu(Student* studentHead, Course* courseHead) {
 		printf("\nEnter your choice: ");
 		if (scanf("%d", &choice) != 1) {
 			printf("Invalid input! Please enter a number.\n");
-			while (getchar() != '\n'); // پاک کردن بافر ورودی
+			while (getchar() != '\n'); 
 			continue;
 		}
 
@@ -887,7 +852,7 @@ void ViewMenu(Student* studentHead, Course* courseHead) {
 			ListStudents(studentHead, courseHead);
 			break;
 		case 3:
-			printf("\nCurricula feature is not implemented yet.\n");
+			ViewAllSchedules();
 			break;
 		case 4:
 			printf("\nReturning to Golestan menu...\n");
@@ -908,7 +873,7 @@ void ManageMenu(Course** courseHead) {
 		printf("\nEnter your choice: ");
 		if (scanf("%d", &choice) != 1) {
 			printf("Invalid input! Please enter a number.\n");
-			while (getchar() != '\n'); // پاک کردن بافر ورودی
+			while (getchar() != '\n'); 
 			continue;
 		}
 
@@ -938,7 +903,7 @@ void Golestan(Student* studentHead, Course** courseHead) {
 		printf("\nEnter your choice: ");
 		if (scanf("%d", &choice) != 1) {
 			printf("Invalid input! Please enter a number.\n");
-			while (getchar() != '\n'); // پاک کردن بافر ورودی
+			while (getchar() != '\n'); 
 			continue;
 		}
 
@@ -967,7 +932,7 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 	int departmentChoice;
 	if (scanf("%d", &departmentChoice) != 1 || departmentChoice < 1 || departmentChoice > FieldOfStudyCount) {
 		printf("Invalid input! Please enter a number between 1 and %d.\n", FieldOfStudyCount);
-		while (getchar() != '\n'); // پاک‌سازی ورودی
+		while (getchar() != '\n'); 
 		return;
 	}
 
@@ -986,7 +951,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 	tempCourse = courseHead;
 	while (tempCourse != NULL) {
 		if (strcmp(tempCourse->CourseID, courseID) == 0) {
-			// بررسی تعداد دوره‌های ثبت‌شده
 			int enrolledCount = 0;
 			for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
 				if (student->EnrolledCourses[i][0] != '\0') {
@@ -998,7 +962,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 				return;
 			}
 
-			// بررسی پیش‌نیازها
 			int prerequisitesMet = 1;
 			for (int i = 0; i < tempCourse->PrerequisiteCount; i++) {
 				int found = 0;
@@ -1018,7 +981,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 				return;
 			}
 
-			// بررسی تداخل زمانی
 			for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
 				if (student->EnrolledCourses[i][0] != '\0') {
 					Course* enrolledCourse = courseHead;
@@ -1036,7 +998,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 				}
 			}
 
-			// ثبت‌نام در دوره
 			for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
 				if (student->EnrolledCourses[i][0] == '\0') {
 					if (strlen(tempCourse->CourseID) < 20) {
@@ -1116,13 +1077,11 @@ void ViewCourses(Student* student, Course* courseHead) {
 void RequestNewProgram(Student* student, Course* courseHead) {
 	printf("\n---- Request New Program ----\n");
 
-	// استخراج سه رقم اول شماره دانشجویی
-	int firstThreeDigits = atoi(student->ID) / 100000;  // سه رقم اول شماره دانشجویی
-	int year = 1300 + firstThreeDigits;  // سال شمسی با افزودن 1300
+	int firstThreeDigits = atoi(student->ID) / 100000;  
+	int year = 1000 + firstThreeDigits;  
 
 	printf("Your admission year is: %d\n", year);
 
-	// استخراج ترم بر اساس شماره دانشجویی
 	char* term = NULL;
 	if (firstThreeDigits == 403) {
 		term = "Term 2";
@@ -1138,7 +1097,6 @@ void RequestNewProgram(Student* student, Course* courseHead) {
 	}
 	printf("Your current term: %s\n", term);
 
-	// نمایش رشته پیشنهادی برای برنامه
 	printf("Suggested program based on your admission year: %s\n", FieldOfStudy[0]);
 }
 
@@ -1165,13 +1123,13 @@ void PrioritizeCourses(Student* student, Course* courseHead) {
 			scanf("%d", &priority[i]);
 			if (priority[i] < 1 || priority[i] > MAX_ENROLLED_COURSES) {
 				printf("Error: Priority must be between 1 and %d.\n", MAX_ENROLLED_COURSES);
-				i--; // بازگشت به ورودی قبلی
+				i--;
 				continue;
 			}
 			for (int j = 0; j < i; j++) {
 				if (priority[i] == priority[j]) {
 					printf("Error: Duplicate priority value. Please choose a unique priority.\n");
-					i--; // بازگشت به ورودی قبلی
+					i--; 
 					break;
 				}
 			}
@@ -1183,94 +1141,54 @@ void PrioritizeCourses(Student* student, Course* courseHead) {
 
 void GenerateSchedules(Student* student, Course* courseHead, char schedules[3][MAX_ENROLLED_COURSES][20], char scheduleNames[3][50]) {
 	printf("\n---- Generate Weekly Schedules ----\n");
-	int scheduleCount = 0;
 
-	// Generate 3 schedules
 	for (int i = 0; i < 3; i++) {
 		printf("Enter name for schedule %d: ", i + 1);
 		scanf("%s", scheduleNames[i]);
 
-		// Copy enrolled courses to schedule based on priority
 		for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
 			if (student->EnrolledCourses[j][0] != '\0') {
 				strcpy(schedules[i][j], student->EnrolledCourses[j]);
 			}
 		}
-		scheduleCount++;
+
+		if (scheduleCount < MAX_SCHEDULES) {
+			strcpy(allSchedules[scheduleCount].studentName, student->UserName);
+			strcpy(allSchedules[scheduleCount].scheduleName, scheduleNames[i]);
+			for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
+				strcpy(allSchedules[scheduleCount].schedule[j], schedules[i][j]);
+			}
+			scheduleCount++;
+		}
+		else {
+			printf("Error: Maximum number of schedules reached!\n");
+		}
 	}
 
-	printf("Generated %d schedules successfully!\n", scheduleCount);
-}	
+	printf("Generated %d schedules successfully!\n", 3);
+}
 
-// void PrintSchedules(Student* student, Course* courseHead, char schedules[3][MAX_ENROLLED_COURSES][20], char scheduleNames[3][50]) {
-	/*printf("\n---- Weekly Schedules ----\n");
-	for (int i = 0; i < 3; i++) {
-		printf("\nSchedule: %s\n", scheduleNames[i]);
-		printf("Time\t\tMonday\t\tTuesday\t\tWednesday\tThursday\tFriday\n");
-
-		for (int hour = 8; hour <= 17; hour++) {
-			printf("%02d:00 - %02d:00\t", hour, hour + 1);
-			for (int day = 0; day < 5; day++) {
-				char* dayName;
-				switch (day) {
-				case 0: dayName = "Monday"; break;
-				case 1: dayName = "Tuesday"; break;
-				case 2: dayName = "Wednesday"; break;
-				case 3: dayName = "Thursday"; break;
-				case 4: dayName = "Friday"; break;
-				}
-
-				int found = 0;
-				for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
-					if (schedules[i][j][0] != '\0') {
-						Course* tempCourse = courseHead;
-						while (tempCourse != NULL) {
-							if (strcmp(tempCourse->CourseID, schedules[i][j]) == 0) {
-								if (strstr(tempCourse->Days, dayName) != NULL && atoi(tempCourse->StartTime) == hour) {
-									printf("%s\t", tempCourse->CourseName);
-									found = 1;
-									break;
-								}
-							}
-							tempCourse = tempCourse->next;
-						}
-					}
-				}
-				if (!found) {
-					printf("-\t\t");
-				}
-//			}*/
-//			printf("\n");
-//		}
-//	}
-//}
 void PrintSchedules(Student* student, Course* courseHead, char schedules[3][MAX_ENROLLED_COURSES][20], char scheduleNames[3][50]) {
 	printf("\n---- Weekly Schedules ----\n");
 
-	// روزهای هفته از شنبه تا چهارشنبه
-	const char* daysOfWeek[5] = { "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday" };
+	const char* daysOfWeek[6] = { "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday" };
 
-	// برای هر برنامه هفتگی
 	for (int i = 0; i < 3; i++) {
 		printf("\nSchedule: %s\n", scheduleNames[i]);
-		printf("---------------------------------------------------------------\n");
-		printf("Time      | Saturday     | Sunday       | Monday       | Tuesday      | Wednesday    \n");
-		printf("---------------------------------------------------------------\n");
+		printf("----------------------------------------------------------------------------------------------------\n");
+		printf("Time         | Saturday     | Sunday       | Monday       | Tuesday      | Wednesday    | Thursday     \n");
+		printf("----------------------------------------------------------------------------------------------------\n");
 
-		// برای هر ساعت از 8 تا 17
 		for (int hour = 8; hour <= 17; hour++) {
 			printf("%02d:00-%02d:00 | ", hour, hour + 1);
 
-			// برای هر روز از هفته
-			for (int day = 0; day < 5; day++) {
+			for (int day = 0; day < 6; day++) {
 				int found = 0;
 
-				// بررسی دروس ثبت‌نام‌شده در این زمان و روز
 				for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
 					if (schedules[i][j][0] != '\0') {
 						Course* tempCourse = courseHead;
 
-						// جستجو در لیست دروس
 						while (tempCourse != NULL) {
 							if (strcmp(tempCourse->CourseID, schedules[i][j]) == 0) {
 								if (strstr(tempCourse->Days, daysOfWeek[day]) != NULL &&
@@ -1285,16 +1203,15 @@ void PrintSchedules(Student* student, Course* courseHead, char schedules[3][MAX_
 					}
 				}
 
-				// اگر هیچ درسی پیدا نشد، خالی نمایش بده
 				if (!found) {
-					printf("            | ");
+					printf("              | ");
 				}
 			}
 
 			printf("\n");
 		}
 
-		printf("---------------------------------------------------------------\n");
+		printf("-------------------------------------------------------------------------------------------------------\n");
 	}
 }
 
@@ -1311,6 +1228,20 @@ void CheckDuplicateCourses(Student* student) {
 		}
 	}
 	printf("No duplicate courses found.\n");
+}
+
+void ViewAllSchedules() {
+	printf("\n---- All Saved Schedules ----\n");
+	for (int i = 0; i < scheduleCount; i++) {
+		printf("Student: %s, Schedule Name: %s\n", allSchedules[i].studentName, allSchedules[i].scheduleName);
+		printf("Courses:\n");
+		for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
+			if (allSchedules[i].schedule[j][0] != '\0') {
+				printf("- %s\n", allSchedules[i].schedule[j]);
+			}
+		}
+		printf("----------------------------\n");
+	}
 }
 
 void StudentMenu(Student* student, Course* courseHead) {
