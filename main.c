@@ -5,35 +5,28 @@
 #include <Windows.h>
 #include "UniPlaneHeader.h"
 
-
-
-int CourseIDCounter[MAX_COURSES] = { 0 }; 
-
- // تعداد برنامه‌های ذخیره‌شده
-
+int CourseIDCounter[MAX_COURSES] = { 0 }; // شمارنده برای کورس هایی که داریم
 
 int main() {
     Student* studentHead = NULL;
     Course* courseHead = NULL;
 
     LoadFromFile(&studentHead);
-
     LoadCoursesFromFile(&courseHead);
-
     LoadSchedulesFromFile();
-   
+
     int choice;
     do {
-        choice = welcome();
+        choice = welcome(); 
 
         switch (choice) {
         case 1: {
             int loginResult = login(studentHead);
             if (loginResult == 1) {
-                StudentMenu(studentHead, &courseHead);
+                StudentMenu(studentHead, &courseHead);  
             }
             else if (loginResult == 2) {
-                Golestan(studentHead, &courseHead);
+                Golestan(studentHead, &courseHead); 
             }
             else {
                 printf("Returning to main menu...\n");
@@ -41,23 +34,24 @@ int main() {
             break;
         }
         case 2:
-            signup(&studentHead, courseHead);
+            signup(&studentHead, courseHead);  
             break;
         case 3:
             if (login(studentHead)) {
-                Golestan(studentHead, &courseHead);
+                Golestan(studentHead, &courseHead);  
             }
             break;
         case 0:
-            printf("Exiting...\n");
+            printf("Exiting...\n");  
             break;
         default:
-            printf("Invalid choice. Please try again.\n");
+            printf("Invalid choice. Please try again.\n"); 
             break;
         }
-    } while (choice != 0);
+    } while (choice != 0); 
 
     FreeStudentList(studentHead);
     FreeCourseList(courseHead);
+
     return 0;
 }

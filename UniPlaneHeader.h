@@ -3,10 +3,10 @@
 
 
 #define MAX_STUDY_LENGTH 50   //حداکثر طول رشته تحصیلی
-#define MAX_PASSED_COURSES 10 // حداکثر تعداد دروس پاس شده
+#define MAX_PASSED_COURSES 50 // حداکثر تعداد دروس پاس شده
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
 #define MAX_COURSES 200       // حداکثر تعداد درس ها در این برنامه
-#define MAX_ENROLLED_COURSES 10 // حداکثر تعداد دروس ثبت‌نام شده
+#define MAX_ENROLLED_COURSES 50 // حداکثر تعداد دروس ثبت‌نام شده
 #define MAX_SCHEDULES 100  // حداکثر تعداد برنامه‌های قابل ذخیره‌سازی
 
 extern int CourseIDCounter[MAX_COURSES];
@@ -45,6 +45,8 @@ typedef struct StudentSchedule {
     char studentName[50]; 
     char scheduleName[50];
     char schedule[MAX_ENROLLED_COURSES][20]; 
+    int scheduleUnits[MAX_ENROLLED_COURSES];  // واحدهای درسی برای هر درس
+    char scheduleTimes[MAX_ENROLLED_COURSES][20];
 } StudentSchedule;
 StudentSchedule allSchedules[MAX_SCHEDULES];
 
