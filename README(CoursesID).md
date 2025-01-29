@@ -21,3 +21,5 @@ TarbiatBadani= 110
 Varzesh 1 = 111
 
 Andishe 1 = 112
+
+Physic3   =  113

@@ -28,7 +28,14 @@ int main() {
         case 1: {
             int loginResult = login(studentHead);
             if (loginResult == 1) {
-                StudentMenu();
+                Student* currentStudent = studentHead;
+                while (currentStudent != NULL) {
+                    if (strcmp(currentStudent->UserName, "username") == 0) { // جایگزین با نام کاربری واقعی
+                        StudentMenu(currentStudent, courseHead);
+                        break;
+                    }
+                    currentStudent = currentStudent->next;
+                }
             }
             else if (loginResult == 2) {
                 Golestan(studentHead, &courseHead);
