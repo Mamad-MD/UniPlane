@@ -1,13 +1,15 @@
 ﻿#ifndef UNIPLANE_H_
 #define UNIPLANE_H_
 
+ 
+              //   کامنت ها بصورت دستی برای خوانایی کد و رساندن منظور در این قسمت اضافه شده
 
 #define MAX_STUDY_LENGTH 50   //حداکثر طول رشته تحصیلی
 #define MAX_PASSED_COURSES 10 // حداکثر تعداد دروس پاس شده
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
-#define MAX_COURSES 200       // حداکثر تعداد درس ها در این برنامه
-#define MAX_ENROLLED_COURSES 10 // حداکثر تعداد دروس ثبت‌نام شده
-#define MAX_SCHEDULES 100  // حداکثر تعداد برنامه‌های قابل ذخیره‌سازی
+#define MAX_COURSES 200       // حداکثر تعداد درس هایی که تو این برنامه ن
+#define MAX_ENROLLED_COURSES 10 // حداکثر تعداد دروسی که ثبت‌نام شده
+#define MAX_SCHEDULES 100  // حداکثر تعداد برنامه‌های قابل ذخیره شدن
 
 extern int CourseIDCounter[MAX_COURSES];
 
@@ -70,7 +72,7 @@ void RemovePrerequisite(Course* course);
 void ListCourses(Course* head);
 void ListStudents(Student* head, Course* courseHead);
 void ViewPrerequisites(Course* course);
-void StudentMenu(Student* student, Course* courseHead);
+void StudentMenu(Student* student, Course* courseHead); 
 void EnrollInCourses(Student* student, Course* courseHead);
 void ChangePassword(Student* student);
 void ChangeUsername(Student* student);

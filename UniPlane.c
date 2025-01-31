@@ -51,7 +51,6 @@ void SaveToFile(Student* student) {
 	fclose(file);
 }
 
-
 void LoadFromFile(Student** head) {
 	FILE* file = fopen("Students.dat", "rb");
 	if (file == NULL) {
@@ -78,7 +77,6 @@ void LoadFromFile(Student** head) {
 	fclose(file);
 }
 
-
 void SaveCourseToFile(Course* course) {
 	FILE* file = fopen("Courses.dat", "ab");
 	if (file == NULL) {
@@ -95,7 +93,6 @@ void SaveCourseToFile(Course* course) {
 	}
 	fclose(file);
 }
-
 
 void LoadCoursesFromFile(Course** head) {
 	FILE* file = fopen("Courses.dat", "rb");
@@ -418,24 +415,22 @@ int login(Student* head) {
 }
 
 void GenerateCourseID(char* courseID, const char* baseID, Course* head) {
-	int counter = 1;  // شمارنده را از 1 شروع می‌کنیم
+	int counter = 1; 
 
-	// بررسی لیست دروس برای یافتن بزرگ‌ترین شماره‌ی موجود برای این پیشوند
 	Course* temp = head;
 	while (temp != NULL) {
 		char existingPrefix[10];
 		int existingNumber;
 
-		// استخراج بخش شماره از CourseID موجود
+
 		if (sscanf(temp->CourseID, "%3s-%02d", existingPrefix, &existingNumber) == 2) {
 			if (strcmp(existingPrefix, baseID) == 0 && existingNumber >= counter) {
-				counter = existingNumber + 1; // شماره جدید باید از بزرگ‌ترین مقدار قبلی بیشتر باشد
+				counter = existingNumber + 1; 
 			}
 		}
 		temp = temp->next;
 	}
 
-	// تولید شناسه جدید بر اساس شماره‌ای که پیدا کردیم
 	sprintf(courseID, "%s-%02d", baseID, counter);
 }
 
@@ -462,7 +457,6 @@ void AddCourse(Course** head) {
 	printf("Enter Base Course ID (e.g., 101): ");
 	scanf("%9s", baseID);
 
-	// اصلاح شده: پاس دادن لیست `head` به `GenerateCourseID`
 	GenerateCourseID(newCourse->CourseID, baseID, *head);
 
 	printf("Auto-generated Course ID: %s\n", newCourse->CourseID);
@@ -477,7 +471,7 @@ void AddCourse(Course** head) {
 
 	printf("Enter Time (for example, 8:00 10:00 Saturday-Monday): ");
 	char timeInput[100];
-	getchar();  // واسه حذف کاراکتر جدید خط قبلی
+	getchar();
 	fgets(timeInput, sizeof(timeInput), stdin);
 	timeInput[strcspn(timeInput, "\n")] = '\0';
 	sscanf(timeInput, "%s %s %[^\n]", newCourse->StartTime, newCourse->EndTime, newCourse->Days);
@@ -614,7 +608,7 @@ void ManagePrerequisites(Course* courseHead) {
 	printf("Enter Course ID to manage prerequisites: ");
 	if (scanf("%s", courseID) != 1) {
 		printf("Invalid input! Please enter a valid Course ID.\n");
-		while (getchar() != '\n'); // clear buffer
+		while (getchar() != '\n'); 
 		return;
 	}
 
@@ -868,7 +862,7 @@ int getValidChoice(int min, int max) {
 
 		if (scanf("%d", &choice) != 1 || choice < min || choice > max) {
 			printf("Invalid input! Please enter a number between %d and %d.\n", min, max);
-			while (getchar() != '\n'); // clear the buffer
+			while (getchar() != '\n');
 		}
 		else {
 			return choice;
@@ -964,46 +958,17 @@ void Golestan(Student* studentHead, Course** courseHead) {
 	} while (1);
 }
 
-
-
-
 void ShowEnrolledCourses(Student* student) {
 	printf("\n---- Enrolled Courses ----\n");
 	int courseCount = 0;
 	for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
 		if (student->EnrolledCourses[i][0] != '\0') {
-			printf("📌 %s\n", student->EnrolledCourses[i]);
+			printf(" %s\n", student->EnrolledCourses[i]);
 			courseCount++;
 		}
 	}
 	if (courseCount == 0) {
-		printf("❌ No courses enrolled.\n");
-	}
-}
-
-void printCourseData(Course* head) {
-	Course* tempCourse = head;
-
-	while (tempCourse != NULL) {
-		printf("\n--- Course Data ---\n");
-		printf("CourseID: %s\n", tempCourse->CourseID);
-		printf("CourseName: %s\n", tempCourse->CourseName);
-		printf("StartTime: %s\n", tempCourse->StartTime);
-		printf("EndTime: %s\n", tempCourse->EndTime);
-		printf("Days: %s\n", tempCourse->Days);
-
-		if (tempCourse->PrerequisiteCount > 0) {
-			printf("Prerequisites: ");
-			for (int i = 0; i < tempCourse->PrerequisiteCount; i++) {
-				printf("%s ", tempCourse->Prerequisites[i]);
-			}
-			printf("\n");
-		}
-		else {
-			printf("No prerequisites for this course.\n");
-		}
-
-		tempCourse = tempCourse->next;
+		printf(" No courses enrolled.\n");
 	}
 }
 
@@ -1012,9 +977,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 		printf("❌ Error: Student or Course list is not initialized!\n");
 		return;
 	}
-
-	// چاپ داده‌های دوره‌ها
-	printCourseData(courseHead);
 
 	char courseID[20];
 	int continueEnroll = 1;
@@ -1025,8 +987,11 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 
 		int foundCourse = 0;
 		while (tempCourse != NULL) {
-			// بررسی اینکه داده‌ها به درستی مقداردهی شده‌اند
-			if (isValidCourseData(tempCourse)) {
+			if (tempCourse->CourseID != NULL && strlen(tempCourse->CourseID) > 0 &&
+				tempCourse->CourseName != NULL && strlen(tempCourse->CourseName) > 0 &&
+				tempCourse->StartTime != NULL && strlen(tempCourse->StartTime) > 0 &&
+				tempCourse->EndTime != NULL && strlen(tempCourse->EndTime) > 0 &&
+				tempCourse->Days != NULL && strlen(tempCourse->Days) > 0) {
 				printf("📌 Course ID: %s, Name: %s, Time: %s - %s, Days: %s\n",
 					tempCourse->CourseID, tempCourse->CourseName, tempCourse->StartTime, tempCourse->EndTime, tempCourse->Days);
 				foundCourse = 1;
@@ -1042,10 +1007,9 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 			return;
 		}
 
-		// ورودی شناسه دوره
 		printf("\nEnter Course ID to enroll: ");
 		fgets(courseID, sizeof(courseID), stdin);
-		courseID[strcspn(courseID, "\n")] = '\0'; // حذف '\n' اضافی
+		courseID[strcspn(courseID, "\n")] = '\0';
 
 		tempCourse = courseHead;
 		int courseFound = 0;
@@ -1053,7 +1017,6 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 			if (strcmp(tempCourse->CourseID, courseID) == 0) {
 				courseFound = 1;
 
-				// بررسی تعداد دروس ثبت‌نام شده
 				int enrolledCount = 0;
 				for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
 					if (student->EnrolledCourses[i][0] != '\0') {
@@ -1065,21 +1028,56 @@ void EnrollInCourses(Student* student, Course* courseHead) {
 					return;
 				}
 
-				// بررسی پیش‌نیازهای
+				int prerequisitesMet = 1;
+				for (int i = 0; i < tempCourse->PrerequisiteCount; i++) {
+					int found = 0;
+					for (int j = 0; j < MAX_PASSED_COURSES; j++) {
+						if (strcmp(student->CoursesPassed[j], tempCourse->Prerequisites[i]) == 0) {
+							found = 1;
+							break;
+						}
+					}
+					if (!found) {
+						prerequisitesMet = 0;
+						printf("⚠ Prerequisite not met: %s\n", tempCourse->Prerequisites[i]);
+						break;
+					}
+				}
 
+				if (!prerequisitesMet) {
+					printf("⚠ You have not met the prerequisites for this course!\n");
+					return;
+				}
 
+				for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
+					if (student->EnrolledCourses[i][0] == '\0') {
+						strncpy(student->EnrolledCourses[i], tempCourse->CourseID, sizeof(student->EnrolledCourses[i]) - 1);
+						student->EnrolledCourses[i][sizeof(student->EnrolledCourses[i]) - 1] = '\0';
+						printf("✅ Successfully enrolled in %s!\n", tempCourse->CourseName);
+						break;
+					}
+				}
+				break;
+			}
+			tempCourse = tempCourse->next;
+		}
 
+		if (!courseFound) {
+			printf("❌ Invalid Course ID entered!\n");
+			continue;
+		}
 
+		char continueChoice;
+		printf("\nWould you like to enroll in more courses? (y/n): ");
+		scanf(" %c", &continueChoice);
 
+		if (continueChoice == 'n' || continueChoice == 'N') {
+			continueEnroll = 0;
+		}
+	}
 
-
-
-
-
-
-
-
-
+	printf("\n Enrollment process completed.\n");
+}
 
 void SaveToFileAfterChange(Student* student) {
 	if (student == NULL) {
@@ -1253,7 +1251,7 @@ void PrioritizeCourses(Student* student, Course* courseHead) {
 		printf("Priority for course %d: ", i + 1);
 		if (scanf("%d", &input) != 1 || input < 1 || input > enrolledCount || usedPriority[input]) {
 			printf("Error: Invalid or duplicate priority value.\n");
-			while (getchar() != '\n');  // Clear input buffer
+			while (getchar() != '\n'); 
 			i--;
 			continue;
 		}
@@ -1531,129 +1529,3 @@ void FreeCourseList(Course* head) {
 		free(temp);
 	}
 }
-
-
-/*
-void ShowCoursesForPriority(Course* head, Student* student) {
-	printf("\n--- Your Selected Courses ---\n");
-	int i = 1;
-	for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
-		if (strlen(student->EnrolledCourses[j]) > 0) {
-			Course* temp = head;
-			while (temp != NULL) {
-				if (strcmp(temp->CourseID, student->EnrolledCourses[j]) == 0) {
-					printf("%d. Course ID: %s, Name: %s\n", i, temp->CourseID, temp->CourseName);
-					break;
-				}
-				temp = temp->next;
-			}
-			i++;
-		}
-	}
-}
-
-
-void PrioritizeCourses(Course* head, Student* student) {
-	int priorities[MAX_ENROLLED_COURSES] = { 0 };
-	int numCourses = 0;
-
-	// نمایش دروس انتخاب‌شده و دریافت اولویت
-	ShowCoursesForPriority(head, student);
-
-	printf("\n--- Assign Priorities to Courses ---\n");
-	for (int j = 0; j < MAX_ENROLLED_COURSES; j++) {
-		if (strlen(student->EnrolledCourses[j]) > 0) {
-			printf("Enter priority for course %s (1-%d): ", student->EnrolledCourses[j], MAX_ENROLLED_COURSES);
-			int priority;
-			scanf("%d", &priority);
-			priorities[numCourses] = priority;
-			numCourses++;
-		}
-	}
-
-	// تایید یا تغییر اولویت‌ها
-	int confirm;
-	do {
-		printf("\n--- Confirm Priorities ---\n");
-		for (int i = 0; i < numCourses; i++) {
-			printf("Course: %s, Priority: %d\n", student->EnrolledCourses[i], priorities[i]);
-		}
-
-		printf("\nDo you want to change the priorities?\n");
-		printf("1. Yes\n");
-		printf("2. No, confirm\n");
-		printf("Enter your choice: ");
-		scanf("%d", &confirm);
-
-		if (confirm == 1) {
-			// تغییر اولویت‌ها
-			printf("\nRe-enter priorities:\n");
-			for (int i = 0; i < numCourses; i++) {
-				printf("Enter new priority for course %s: ", student->EnrolledCourses[i]);
-				scanf("%d", &priorities[i]);
-			}
-		}
-	} while (confirm != 2);
-
-	// ذخیره اولویت‌ها در لیست
-	for (int i = 0; i < numCourses; i++) {
-		// جابجایی بر اساس اولویت
-		// اینجا شما می‌توانید بر اساس اولویت‌ها دروس را جابجا کنید
-		// به‌طور مثال، تغییر ترتیب دروس در student->EnrolledCourses با استفاده از اولویت‌ها
-	}
-}
-
-
-void RearrangeCoursesByPriority(Student* student, int* priorities) {
-	char tempCourse[20];
-	int numCourses = 0;
-
-	// تعداد دروس انتخاب‌شده
-	for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
-		if (strlen(student->EnrolledCourses[i]) > 0) {
-			numCourses++;
-		}
-	}
-
-	// جابجایی دروس بر اساس اولویت‌ها
-	for (int i = 0; i < numCourses; i++) {
-		for (int j = i + 1; j < numCourses; j++) {
-			if (priorities[i] > priorities[j]) {
-				// جابجایی اولویت‌ها
-				int tempPriority = priorities[i];
-				priorities[i] = priorities[j];
-				priorities[j] = tempPriority;
-
-				// جابجایی دروس در آرایه EnrolledCourses
-				strcpy(tempCourse, student->EnrolledCourses[i]);
-				strcpy(student->EnrolledCourses[i], student->EnrolledCourses[j]);
-				strcpy(student->EnrolledCourses[j], tempCourse);
-			}
-		}
-	}
-}
-
-
-
-void FinalizePrioritiesAndPlan(Student* student, Course* head) {
-	int priorities[MAX_ENROLLED_COURSES];
-
-	// اولویت‌بندی دروس
-	PrioritizeCourses(head, student);
-
-	// جابجایی دروس بر اساس اولویت‌ها
-	RearrangeCoursesByPriority(student, priorities);
-
-	// تایید نهایی
-	printf("\n--- Final Confirmation ---\n");
-	printf("Your courses have been prioritized and reordered.\n");
-
-	// نمایش برنامه‌ی نهایی
-	printf("\n--- Your Final Schedule ---\n");
-	for (int i = 0; i < MAX_ENROLLED_COURSES; i++) {
-		if (strlen(student->EnrolledCourses[i]) > 0) {
-			printf("%d. %s\n", i + 1, student->EnrolledCourses[i]);
-		}
-	}
-}
-*/

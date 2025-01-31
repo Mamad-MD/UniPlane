@@ -8,6 +8,7 @@
 int CourseIDCounter[MAX_COURSES] = { 0 };
 
 int main() {
+
     Student* studentHead = NULL;
     Course* courseHead = NULL;
 
@@ -16,6 +17,7 @@ int main() {
     LoadSchedulesFromFile();
 
     int choice;
+
     do {
         choice = welcome(); 
 
