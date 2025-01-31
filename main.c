@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include "UniPlaneHeader.h"
 
-int CourseIDCounter[MAX_COURSES] = { 0 }; // شمارنده برای کورس هایی که داریم
+int CourseIDCounter[MAX_COURSES] = { 0 };
 
 int main() {
     Student* studentHead = NULL;
