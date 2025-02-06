@@ -1,7 +1,6 @@
 ﻿#ifndef UNIPLANE_H_
 #define UNIPLANE_H_
 
- 
               //   کامنت ها بصورت دستی برای خوانایی کد و رساندن منظور در این قسمت اضافه شده
 
 #define MAX_STUDY_LENGTH 50   //حداکثر طول رشته تحصیلی
@@ -9,7 +8,7 @@
 #define MAX_PREREQUISITES 5   //حداکثر تعداد پیش نیازها
 #define MAX_COURSES 200       // حداکثر تعداد درس هایی که تو این برنامه ن
 #define MAX_ENROLLED_COURSES 10 // حداکثر تعداد دروسی که ثبت‌نام شده
-#define MAX_SCHEDULES 100  // حداکثر تعداد برنامه‌های قابل ذخیره شدن
+#define MAX_SCHEDULES 15  // حداکثر تعداد برنامه‌های قابل ذخیره شدن
 
 extern int CourseIDCounter[MAX_COURSES];
 
@@ -43,6 +42,8 @@ typedef struct Course {
     struct Course* next;
 } Course;
 
+
+
 typedef struct StudentSchedule {
     char studentName[50]; 
     char scheduleName[50];
@@ -59,10 +60,10 @@ extern const int FieldOfStudyCount;
 int welcome();
 void signup(Student** head, Course* courseHead);
 int login(Student* head);
-void Golestan(Student* studentHead, Course** courseHead);
+void Golestan(Student* studentHead, Course* courseHead);
 void SaveToFile(Student* student);
 void LoadFromFile(Student** head);
-void AddCourse(Course** head);
+void AddCourse(Course* head);
 void SaveCourseToFile(Course* course);
 void LoadCoursesFromFile(Course** head);
 void ManagePrerequisites(Course* courseHead); 
@@ -87,3 +88,34 @@ void FreeStudentList(Student* head);
 void FreeCourseList(Course* head);
 
 #endif //UNIPLANE_H_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*struct Date {
+    char day1[4];
+    char day2[4];
+    char startTime[6];
+    char endTime[6];
+};
+
+
+struct Presentation {
+    char professorName[21];
+    struct Date date;
+};*/

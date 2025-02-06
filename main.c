@@ -8,7 +8,7 @@
 int CourseIDCounter[MAX_COURSES] = { 0 };
 
 int main() {
-
+    SetConsoleOutputCP(CP_UTF8);
     Student* studentHead = NULL;
     Course* courseHead = NULL;
 
@@ -25,10 +25,10 @@ int main() {
         case 1: {
             int loginResult = login(studentHead);
             if (loginResult == 1) {
-                StudentMenu(studentHead, &courseHead);  
+                StudentMenu(studentHead, courseHead);  
             }
             else if (loginResult == 2) {
-                Golestan(studentHead, &courseHead); 
+                Golestan(studentHead, courseHead); 
             }
             else {
                 printf("Returning to main menu...\n");
@@ -40,7 +40,7 @@ int main() {
             break;
         case 3:
             if (login(studentHead)) {
-                Golestan(studentHead, &courseHead);  
+                Golestan(studentHead, courseHead);  
             }
             break;
         case 0:
